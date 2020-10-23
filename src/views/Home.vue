@@ -1,89 +1,90 @@
 <template>
   <div class="home">
-    <div class="container-fluid">
+    <div class="spinner-border" role="status" v-if="spinner"></div>
+    <div v-if="!spinner">
       <div class="row justify-content-center">
         <div class="col-auto">
           <h3>{{ comic.title }}</h3>
         </div>
       </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <img :src="comic.img" class="img-fluid" />
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <img :src="comic.img" class="img-fluid" />
+        </div>
       </div>
-    </div>
-  </div>
-  <!--  -->
-  <div v-if="comicRated">
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <p class="clasfication-title">Thank you for your rating</p>
+      <!--  -->
+      <div v-if="comicRated">
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <p class="clasfication-title">Thank you for your rating</p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <button
+              type="button"
+              class="btn btn-success"
+              @click="getComic(maxNumber)"
+            >
+              Read anothe comic
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <button
-          type="button"
-          class="btn btn-success"
-          @click="getComic(maxNumber)"
-        >
-          Read anothe comic
-        </button>
-      </div>
-    </div>
-  </div>
-  <div v-if="!comicRated">
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <p class="clasfication-title">
-          Did you have fun reading this comic? Give us your rating!
-        </p>
-      </div>
-    </div>
-    <div class="row justify-content-center">
-      <div class="col-auto">
-        <p class="clasification">
-          <input
-            id="radio1"
-            type="radio"
-            name="starts"
-            value="5"
-            @click="qualify($event.target.value, comic)"
-          />
-          <label for="radio1">★</label>
-          <input
-            id="radio2"
-            type="radio"
-            name="starts"
-            value="4"
-            @click="qualify($event.target.value, comic)"
-          />
-          <label for="radio2">★</label>
-          <input
-            id="radio3"
-            type="radio"
-            name="starts"
-            value="3"
-            @click="qualify($event.target.value, comic)"
-          />
-          <label for="radio3">★</label>
-          <input
-            id="radio4"
-            type="radio"
-            name="starts"
-            value="2"
-            @click="qualify($event.target.value, comic)"
-          />
-          <label for="radio4">★</label>
-          <input
-            id="radio5"
-            type="radio"
-            name="starts"
-            value="1"
-            @click="qualify($event.target.value, comic)"
-          />
-          <label for="radio5">★</label>
-        </p>
+      <div v-if="!comicRated">
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <p class="clasfication-title">
+              Did you have fun reading this comic? Give us your rating!
+            </p>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <p class="clasification">
+              <input
+                id="radio1"
+                type="radio"
+                name="starts"
+                value="5"
+                @click="qualify($event.target.value, comic)"
+              />
+              <label for="radio1">★</label>
+              <input
+                id="radio2"
+                type="radio"
+                name="starts"
+                value="4"
+                @click="qualify($event.target.value, comic)"
+              />
+              <label for="radio2">★</label>
+              <input
+                id="radio3"
+                type="radio"
+                name="starts"
+                value="3"
+                @click="qualify($event.target.value, comic)"
+              />
+              <label for="radio3">★</label>
+              <input
+                id="radio4"
+                type="radio"
+                name="starts"
+                value="2"
+                @click="qualify($event.target.value, comic)"
+              />
+              <label for="radio4">★</label>
+              <input
+                id="radio5"
+                type="radio"
+                name="starts"
+                value="1"
+                @click="qualify($event.target.value, comic)"
+              />
+              <label for="radio5">★</label>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -135,11 +136,14 @@ export default {
       return comicNumber;
     },
     async getComic(maxNumber) {
+      this.spinner = true;
       let comicNumber = this.getComicNumber(maxNumber);
       this.comic = await axios
         .get(`http://localhost:8080/${comicNumber}/info.0.json`)
         .then(res => {
           this.comicRated = false;
+          this.spinner = false;
+
           return res.data;
         });
     },
@@ -154,7 +158,7 @@ export default {
 </script>
 
 <style scoped>
-.container-fluid {
+.home {
   margin: 20px 10px;
 }
 .row {
@@ -202,5 +206,9 @@ label:hover ~ label {
 
 input[type="radio"]:checked ~ label {
   color: orange;
+}
+.spinner-border {
+  top: 45%;
+  position: absolute;
 }
 </style>
