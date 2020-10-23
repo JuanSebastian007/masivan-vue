@@ -1,5 +1,13 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <h3>{{ $comic.title }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -51,6 +59,7 @@ export default {
         .then(res => {
           return res.data;
         });
+      console.log(this.$comic.img);
     }
   }
 };
